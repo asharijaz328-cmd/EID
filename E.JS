@@ -104,7 +104,7 @@ function draw() {
     // F. POV Footer Text
     ctx.fillStyle = '#ffffff';
     ctx.font = '16px Arial';
-    ctx.fillText("Pov: Eid-UL-Adha Mubarak from Ashar Ijaz 🐑🤍", canvas.width / 2, canvas.height - 50);
+    ctx.fillText("Pov: Eid-UL-Adha Mubarak from Ashar Ijaz 🐑🤍", canvas.width / 2, canvas.height - 90);
 
     requestAnimationFrame(draw);
 }

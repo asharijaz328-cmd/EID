@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Eid-UL-Adha Mubarak from Ashar Ijaz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #030014; font-family: 'Arial', sans-serif; }
+        canvas { display: block; width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+
+    <canvas id="eidCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('eidCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Resize Canvas Dynamically
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Flag Colors
+        const FLAG_COLORS = ['#ff0055', '#00ffcc', '#ffd700', '#ff00ff', '#00ff00'];
+
+        // Generate Stars
+        const stars = [];
+        for (let i = 0; i < 150; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5 + 0.5
+            });
+        }
+
+        // Animation Variables
+        let sheepYOffset = 0;
+        let bounceSpeed = 0.4;
+        let direction = 1;
+
+        function draw() {
+            // Background Clear
+            ctx.fillStyle = '#030014';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // A. Draw Stars
+            ctx.fillStyle = '#ffffff';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // B. Draw Bunting Flags
+            const flagSpacing = canvas.width / 14;
+            const flagHeight = 35;
+            
+            // Left Side Flags
+            for (let i = 0; i < 6; i++) {
+                ctx.fillStyle = FLAG_COLORS[i % FLAG_COLORS.length];
+                ctx.beginPath();
+                ctx.moveTo(i * flagSpacing, 15);
+                ctx.lineTo((i + 1) * flagSpacing, 15);
+                ctx.lineTo(i * flagSpacing + flagSpacing / 2, 15 + flagHeight);
+                ctx.closePath();
+                ctx.fill();
+            }
+            // Right Side Flags
+            for (let i = 0; i < 6; i++) {
+                ctx.fillStyle = FLAG_COLORS[i % FLAG_COLORS.length];
+                ctx.beginPath();
+                ctx.moveTo(canvas.width - (i * flagSpacing), 15);
+                ctx.lineTo(canvas.width - ((i + 1) * flagSpacing), 15);
+                ctx.lineTo(canvas.width - (i * flagSpacing + flagSpacing / 2), 15 + flagHeight);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // C. Draw Text
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 42px "Comic Sans MS", sans-serif';
+            ctx.fillText("Eid-UL-Adha", canvas.width / 2, canvas.height * 0.22);
+            ctx.fillText("Mubarak", canvas.width / 2, canvas.height * 0.32);
+
+            // D. Bounce Logic
+            sheepYOffset += bounceSpeed * direction;
+            if (Math.abs(sheepYOffset) > 12) direction *= -1;
+
+            // Base Grid Anchors
+            const sheepX = canvas.width / 2; 
+            const sheepY = (canvas.height * 0.55) + sheepYOffset;
+
+            // E. FIXED LEGS (Lighter grey and pushed explicitly down past the wool body layer)
+            ctx.fillStyle = '#8a8a8a'; 
+            const legWidth = 14;
+            const legHeight = 85; 
+            const legsYPosition = sheepY + 40; 
+
+            // Draw 4 distinct independent pillars
+            ctx.fillRect(sheepX - 45, legsYPosition, legWidth, legHeight);
+            ctx.fillRect(sheepX - 18, legsYPosition, legWidth, legHeight);
+            ctx.fillRect(sheepX + 8,  legsYPosition, legWidth, legHeight);
+            ctx.fillRect(sheepX + 35, legsYPosition, legWidth, legHeight);
+
+            // Draw Wool Body Overlap (Circles)
+            ctx.fillStyle = '#f0f0f0';
+            const bodyRadius = 45;
+            const circles = [[0, 0], [-35, -10], [35, -10], [-45, 15], [45, 15], [-25, 35], [25, 35], [0, 25]];
+            circles.forEach(pos => {
+                ctx.beginPath();
+                ctx.arc(sheepX + pos[0], sheepY + pos[1], bodyRadius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Draw Head Configuration
+            const headX = sheepX + 35;
+            const headY = sheepY + 5;
+            const headRadius = 32;
+
+            // Ears
+            ctx.fillStyle = '#ffb6c1';
+            ctx.beginPath(); ctx.ellipse(headX - 10, headY - 25, 18, 12, -Math.PI/6, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.ellipse(headX + 25, headY - 25, 18, 12, Math.PI/6, 0, Math.PI * 2); ctx.fill();
+
+            // Face Base
+            ctx.fillStyle = '#ffdab9';
+            ctx.beginPath();
+            ctx.arc(headX, headY, headRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eyes
+            ctx.fillStyle = '#000000';
+            ctx.beginPath(); ctx.arc(headX - 10, headY - 5, 4, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(headX + 10, headY - 5, 4, 0, Math.PI * 2); ctx.fill();
+
+            // Cheeks
+            ctx.fillStyle = '#ffb6c1';
+            ctx.beginPath(); ctx.arc(headX - 18, headY + 8, 5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(headX + 18, headY + 8, 5, 0, Math.PI * 2); ctx.fill();
+
+            // Smile Arc
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(headX, headY + 5, 8, 0, Math.PI);
+            ctx.stroke();
+
+            // F. POV Footer Text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '16px Arial';
+            ctx.fillText("Pov: Eid-UL-Adha Mubarak from Ashar Ijaz 🐑🤍", canvas.width / 2, canvas.height - 50);
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+</html>
